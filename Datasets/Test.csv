@@ -1,0 +1,5 @@
+refcode,Melting point,SMILES
+AABHTZ,212 deg.C,CC(=O)NN1C=NN=C1N(N=Cc1c(Cl)cccc1Cl)C(C)=O
+AACFAZ,190-2deg.C,COC1=C(C(OC1=O)c1ccccc1Cl)C(C)=NN=C(C)C1=C(OC)C(=O)OC1c1ccccc1Cl
+AACMHX10,54-5deg.C,CC(=O)OC(=C1CCCCC1c1ccccc1)c1ccccc1
+AADRIB,80-2deg.C,CC(=O)OC1COC(OC(C)=O)C(OC(C)=O)C1OC(C)=O.CC(=O)OC1COC(OC(C)=O)C(OC(C)=O)C1OC(C)=O
