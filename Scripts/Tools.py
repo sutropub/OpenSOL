@@ -957,6 +957,7 @@ def dnn_prediction(params, model_path, df_dscr):
     # Load the model on cpu for general purpose even though it was trained on GPU
     device = torch.device('cpu')
     model.load_state_dict(torch.load(model_path, map_location=device))
+    model.eval()
     with torch.no_grad():
         yhat = model(torch.tensor(dscr.to_numpy()).float())
 

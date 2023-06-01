@@ -18,8 +18,10 @@ class Model4logS():
                 self.model = '{}/{}_{}_{}_model.pt'.format(self.params['model_dirs'], self.params['model'],  self.params['dscr'], self.params['split'])
                 self.params['scaler_dir'] = '{}/{}_{}_scaler.job'.format(self.params['model_dirs'], self.params['model'],  self.params['dscr'])
                 self.params['network'] = '{}/{}_{}_{}_network.json'.format(self.params['model_dirs'], self.params['model'],  self.params['dscr'], self.params['split'])
-            else:
+            elif self.params['model'] == 'random_forest':
                 self.model = '{}/{}_{}_{}_model.job'.format(self.params['model_dirs'], self.params['model'],  self.params['dscr'], self.params['split'])
+            else:
+                self.model = '{}/{}_{}_{}_model.json'.format(self.params['model_dirs'], self.params['model'],  self.params['dscr'], self.params['split'])
         # pytorch models
         
         #self.model_clustering = '{}/mp_xgb_{}_model.job'.format(self.params['model_dirs'], self.params['c_split'])
@@ -259,7 +261,8 @@ class Model4logS():
             
             xgb_model = Tools.xgb_prod(df, self.params, optimized)
 
-            joblib.dump(xgb_model, self.model)
+            #joblib.dump(xgb_model, self.model)
+            xgb_model.save_model(self.model)
 
 
     def logS_calc(self, file_in, file_out, clogp):
@@ -324,9 +327,15 @@ class Model4logS():
 
         mp_pred = self.params['model'] + '_' + self.params['MP']
 
-        if self.params['model'] in ['random_forest', 'xgboost']:
+        #if self.params['model'] in ['random_forest', 'xgboost']:
+        if self.params['model'] == 'random_forest':
+
             model = joblib.load(self.model)
             df[mp_pred] = model.predict(df_dscr.to_numpy())
+        elif self.params['model'] == 'xgboost':
+            model = xgb.Booster()
+            model.load_model(self.model)
+            df[mp_pred] = model.predict(xgb.DMatrix(df_dscr.to_numpy()))
         else:
             # dnn model
             df[mp_pred] = Tools.dnn_prediction(self.params, self.model, df_dscr)
@@ -630,9 +639,8 @@ if __name__ == "__main__":
 
     import numpy as np
     import pandas as pd
-
+    import xgboost as xgb
     import Tools
-    
     from rdkit.Chem import AllChem
     from rdkit.Chem import PandasTools
     main()
